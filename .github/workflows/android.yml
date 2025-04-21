@@ -10,12 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # এটা খুব গুরুত্বপূর্ণ, না দিলে push হবে না
+      contents: write
 
     steps:
       - uses: actions/checkout@v2
         with:
-          persist-credentials: true   # GITHUB_TOKEN ব্যবহারের জন্য
+          persist-credentials: true
 
       - uses: actions/setup-python@v2
         with:
@@ -25,7 +25,8 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y zip unzip openjdk-11-jdk python3-pip git
-          pip install buildozer
+          pip install --upgrade pip
+          pip install buildozer cython
 
       - name: Build APK
         run: |
@@ -40,5 +41,3 @@ jobs:
           git add output-apk/*.apk || echo "Nothing to add"
           git commit -m "Add built APK" || echo "Nothing to commit"
           git push origin main
-
-                  

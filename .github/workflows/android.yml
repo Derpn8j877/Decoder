@@ -20,18 +20,19 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y zip unzip openjdk-11-jdk python3-pip
+          sudo apt install -y zip unzip openjdk-11-jdk python3-pip git
           pip install buildozer
 
       - name: Build APK
         run: |
           buildozer android debug
 
-      - name: Upload APK
+      - name: Commit APK to repo
         run: |
-          mkdir -p upload
-          cp bin/*.apk upload/
-      - uses: actions/upload-artifact@v2
-        with:
-          name: webslammer-apk
-          path: upload/
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          mkdir -p output-apk
+          cp bin/*.apk output-apk/
+          git add output-apk/*.apk
+          git commit -m "Add built APK"
+          git push origin main
